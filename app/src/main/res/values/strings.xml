@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">KotlinHomeWork</string>
+    <string name="feelsLikeText">Ощущается</string>
+    <string name="temperatureText">Температура</string>
 </resources>

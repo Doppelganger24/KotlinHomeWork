@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.kotlinhomework.R
 import com.example.kotlinhomework.databinding.MainFragmentBinding
 import com.example.kotlinhomework.viewmodel.AppState
 import com.example.kotlinhomework.viewmodel.MainViewModel
@@ -58,6 +59,7 @@ class MainFragment : Fragment() {
         binding.cityName.text = appState.dataWeather.city.city
         binding.feelsLikeValue.text = appState.dataWeather.temperature.toString()
         binding.temperatureValue.text = appState.dataWeather.feelsLike.toString()
+       // binding.image.setImageDrawable(appState.dataWeather.drawable)
     }
 }
 
