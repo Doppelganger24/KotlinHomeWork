@@ -11,15 +11,18 @@ class MainViewModel (private val liveDataToObserve: MutableLiveData<AppState> = 
                      private val repository: Repository = RepositoryImpl()) : ViewModel() {
 
     fun getData(): LiveData<AppState> {
-        getDataFromLocalSource()
+       // getDataFromLocalSource()
         return liveDataToObserve
     }
-    fun getWeather()=getDataFromLocalSource()
+    fun getWeatherFromLocalSourceRussia()=getDataFromLocalSource(true)
+    fun getWeatherFromLocalSourceWorld()=getDataFromLocalSource(false)
 
-     private fun getDataFromLocalSource() {
+     private fun getDataFromLocalSource(isRussian : Boolean) {
         Thread {
             sleep(1000)
-            liveDataToObserve.postValue(AppState.Success(repository.getWeatherFromLocal()))
+            liveDataToObserve.postValue(AppState.Success(
+                if (isRussian) repository.getWeatherFromLocalRussian() else
+                    repository.getWeatherFromLocalWorld()))
         }.start()
     }
 
