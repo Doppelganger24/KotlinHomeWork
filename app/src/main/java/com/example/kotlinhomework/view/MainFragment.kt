@@ -1,7 +1,7 @@
 package com.example.kotlinhomework.view
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,32 +10,57 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.kotlinhomework.R
 import com.example.kotlinhomework.databinding.FragmentMainBinding
+import com.example.kotlinhomework.ui.model.Weather
 import com.example.kotlinhomework.viewmodel.AppState
 import com.example.kotlinhomework.viewmodel.MainViewModel
-import com.google.android.material.snackbar.Snackbar
 
 class MainFragment : Fragment() {
+
+    private val mainFragmentAdapter: MainFragmentAdapter =
+        MainFragmentAdapter(object : OnItemClickListener {
+            override fun onItemViewClick(weather: Weather) {
+                val manager = activity?.supportFragmentManager
+                if (manager != null) {
+                    val bundle = Bundle()
+                    bundle.putParcelable(DetailsFragment.KEY_WEATHER, weather)
+                    manager.beginTransaction()
+                        .replace(R.id.container, DetailsFragment.newInstance(bundle))
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
+        })
+
 
     companion object {
         fun newInstance() = MainFragment()
     }
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var binding: FragmentMainBinding
+    private var _binding: FragmentMainBinding? = null
+    private val binding: FragmentMainBinding
+        get() :FragmentMainBinding {
+            return _binding!!
+        }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+        mainFragmentAdapter.removeListener()
+    }
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMainBinding.inflate(inflater, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     var isRussian: Boolean = true
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.getData().observe(viewLifecycleOwner, Observer { renderData(it) })
         viewModel.getWeatherFromLocalSourceRussia()
@@ -56,29 +81,25 @@ class MainFragment : Fragment() {
         }
         isRussian != isRussian
     }
-}
 
-private fun renderData(appState: AppState) {
-    when (appState) {
-        is AppState.Error -> TODO() //show errors
-        is AppState.Success -> {
-            binding.mainFragmentLoadingLayout.visibility = View.GONE
-        }
-        AppState.Loading -> {
-            binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
+    private fun renderData(appState: AppState) {
+        when (appState) {
+            is AppState.Error -> TODO() //show errors
+            is AppState.Success -> {
+                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                binding.mainFragmentRecyclerView.adapter = mainFragmentAdapter
+                mainFragmentAdapter.setWeather(appState.dataWeather)
+            }
+            AppState.Loading -> {
+                binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
+            }
         }
     }
+
+
 }
 
-@SuppressLint("SetTextI18n")
-private fun setData(appState: AppState.Success) {
-    binding.cityCoordinates.text =
-        "${appState.dataWeather.city.lat} ${appState.dataWeather.city.long}"
-    binding.cityName.text = appState.dataWeather.city.city
-    binding.feelsLikeValue.text = appState.dataWeather.temperature.toString()
-    binding.temperatureValue.text = appState.dataWeather.feelsLike.toString()
-    binding.image.setImageResource(R.drawable.sun_lightning)
-}
+
 
 
 

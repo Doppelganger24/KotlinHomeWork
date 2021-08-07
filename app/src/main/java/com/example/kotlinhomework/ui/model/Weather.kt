@@ -1,14 +1,16 @@
 package com.example.kotlinhomework.ui.model
 
-import android.graphics.drawable.AdaptiveIconDrawable
-import android.media.Image
+import android.os.Parcelable
 import com.example.kotlinhomework.R
+import kotlinx.android.parcel.Parcelize
 
-class Weather(val city: City = getDefaultCity(), val temperature: Int = 22, val feelsLike: Int = 24)
+@Parcelize
+class Weather(val city: City = getDefaultCity(), val temperature: Int = 22, val feelsLike: Int = 24) :
+    Parcelable
 
 fun getDefaultCity() = City("Новосибирск", 55.00835259999999, 82.93573270000002, R.drawable.sun_lightning)
-
-data class City(val city: String, val lat: Double, val long: Double, val drawable: Int)
+@Parcelize
+data class City(val name: String, val lat: Double, val long: Double, val drawable: Int):Parcelable
 
 fun getWorldCities(): List<Weather> {
     return listOf(

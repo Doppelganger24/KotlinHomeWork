@@ -1,6 +1,7 @@
 package com.example.kotlinhomework.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinhomework.R
 import com.example.kotlinhomework.databinding.MainActivityBinding
@@ -14,7 +15,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, MainFragment.newInstance()).commit()
+                .replace(R.id.container, MainFragment.newInstance()).commit()
+
         }
     }
 }

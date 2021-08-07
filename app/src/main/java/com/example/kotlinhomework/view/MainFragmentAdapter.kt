@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinhomework.R
 import com.example.kotlinhomework.ui.model.Weather
 
-class MainFragmentAdapter : RecyclerView.Adapter<MainFragmentAdapter.MainViewHolder>() {
+class MainFragmentAdapter constructor (var onItemClickListener: OnItemClickListener?)  : RecyclerView.Adapter<MainFragmentAdapter.MainViewHolder>() {
 
     fun setWeather (list: List <Weather>) {
         weatherData = list
@@ -17,11 +17,16 @@ class MainFragmentAdapter : RecyclerView.Adapter<MainFragmentAdapter.MainViewHol
 
     private var weatherData: List<Weather> = listOf()
 
-    class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun init(weather: Weather) {
             itemView.findViewById<TextView>(R.id.mainFragmentRecyclerItemTextView).text =
-                weather.city.city
+                weather.city.name
+            itemView.setOnClickListener {onItemClickListener?.onItemViewClick(weather)}
         }
+    }
+
+    fun removeListener(){
+        onItemClickListener = null
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
