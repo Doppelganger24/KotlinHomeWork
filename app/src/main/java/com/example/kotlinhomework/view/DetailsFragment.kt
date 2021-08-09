@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import com.example.kotlinhomework.R
 import com.example.kotlinhomework.databinding.FragmentDetailsBinding
 import com.example.kotlinhomework.ui.model.Weather
+import kotlinx.android.synthetic.main.fragment_details.*
+import kotlinx.android.synthetic.main.fragment_details.view.*
 
 class DetailsFragment : Fragment() {
 
@@ -52,6 +54,6 @@ class DetailsFragment : Fragment() {
        binding.cityName.text = weather.city.name
        binding.feelsLikeValue.text = weather.temperature.toString()
        binding.temperatureValue.text = weather.feelsLike.toString()
-       binding.image.setImageResource(R.drawable.sun_lightning)
+       binding.image.setImageResource(weather.city.drawable)
    }
 }
